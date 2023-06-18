@@ -6,6 +6,12 @@
     position: relative;
 }
 
+#rocket {
+    position: absolute;
+    right: 300px;
+    top: 100px;
+}
+
 #flightStatus {
     color: green;
 }
