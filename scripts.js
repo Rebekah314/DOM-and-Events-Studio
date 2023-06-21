@@ -13,43 +13,63 @@ const init = () => {
     const rightButton = document.getElementById("right");
     const leftButton = document.getElementById("left");
     const rocketImg = document.getElementById("rocket");
+    let launched = false;
+    
+    
 
-    takeoffButton.addEventListener("click", () => {
+    takeoffButton.addEventListener("click", (event) => {
+
+
         let takeoffConfirm = window.confirm("Confirm that the shuttle is ready for takeoff.");
         if (takeoffConfirm) {
+            takeoffButton.disabled = true;
             status.innerHTML = "Shuttle in flight.";
             backgroundColor.style.background = "blue";
             shuttleHeight.innerHTML = "10000";
-        }
+            launched = true;
+        
     
 
-        rocketImg.style.top = "100px";
-        upButton.addEventListener("click", () => {
-            shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) + 10000);
-            rocketImg.style.top = String(Number(rocketImg.style.top.replace("px", "")) - 10) + "px";
-        });
-        downButton.addEventListener("click", () => {
-            if (Number(shuttleHeight.innerHTML) > 10000) {
-                shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) - 10000);
-                rocketImg.style.top = String(Number(rocketImg.style.top.replace("px", "")) + 10) + "px";
-            } else {
-                window.alert("To go down further, the shuttle must land.")
-            }
-        });
-        
-        rocketImg.style.right = "100px";
-        rightButton.addEventListener("click", () => {
-            rocketImg.style.right = String(Number(rocketImg.style.right.replace("px", "")) - 10) + "px";
-        });
-        leftButton.addEventListener("click", () => {
-            rocketImg.style.right = String(Number(rocketImg.style.right.replace("px", "")) + 10) + "px";
-        });
+            rocketImg.style.top = "100px";
+            upButton.addEventListener("click", () => {
+                shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) + 10000);
+                let upPosition = Number(rocketImg.style.top.replace("px", ""));
+                if (upPosition > 10) {
+                    rocketImg.style.top = String(upPosition - 10) + "px";
+                } else {
+                    window.alert("Maximum height reached!");
+                }
+            });
+            downButton.addEventListener("click", () => {
+                if (Number(shuttleHeight.innerHTML) > 10000) {
+                    shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) - 10000);
+                    rocketImg.style.top = String(Number(rocketImg.style.top.replace("px", "")) + 10) + "px";
+                } else {
+                    window.alert("To go down further, the shuttle must land.")
+                }
+            });
+            rocketImg.style.right = "100px";
+            rightButton.addEventListener("click", () => {
+                let rightPosition = Number(rocketImg.style.right.replace("px", ""));
+                if (rightPosition > 10) {
+                    rocketImg.style.right = String(rightPosition - 10) + "px";
+                }
+            });
+            leftButton.addEventListener("click", () => {
+                let leftPosition = Number(rocketImg.style.right.replace("px", ""));
+                if (leftPosition < 320) {
+                    rocketImg.style.right = String(leftPosition + 10) + "px";
+                }
+                
+            });  
+        }
+    });
 
-        landButton.addEventListener("click", () => {
-            let landAlert = window.alert("The shuttle is landing. landing gear engaged.");
-            status.innerHTML = "The shuttle has landed.";
-            returnToOriginalPosition(backgroundColor, shuttleHeight, rocketImg);
-        });
+    landButton.addEventListener("click", () => {
+        window.alert("The shuttle is landing. landing gear engaged.");
+        status.innerHTML = "The shuttle has landed.";
+        returnToOriginalPosition(backgroundColor, shuttleHeight, rocketImg);
+        launched = false;
     });
 
     abortButton.addEventListener("click", () => {
@@ -57,6 +77,7 @@ const init = () => {
         if (abortConfirm) {
             status.innerHTML = "Mission aborted.";
             returnToOriginalPosition(backgroundColor, shuttleHeight, rocketImg);
+            launched = false;
         }
     });
 }
