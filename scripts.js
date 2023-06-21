@@ -14,8 +14,6 @@ const init = () => {
     const leftButton = document.getElementById("left");
     const rocketImg = document.getElementById("rocket");
 
-
-
     takeoffButton.addEventListener("click", () => {
         let takeoffConfirm = window.confirm("Confirm that the shuttle is ready for takeoff.");
         if (takeoffConfirm) {
@@ -23,54 +21,51 @@ const init = () => {
             backgroundColor.style.background = "blue";
             shuttleHeight.innerHTML = "10000";
         }
-    });
-
-    rocketImg.style.top = "100px";
-
-    upButton.addEventListener("click", () => {
-        shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) + 10000);
-    });
-    downButton.addEventListener("click", () => {
-        if (Number(shuttleHeight.innerHTML) > 10000) {
-            shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) - 10000);
-        } else {
-            window.alert("To go down further, the shuttle must land.")
-        }
-    });
     
-    rocketImg.style.right = "300px";
+
+        rocketImg.style.top = "100px";
+        upButton.addEventListener("click", () => {
+            shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) + 10000);
+            rocketImg.style.top = String(Number(rocketImg.style.top.replace("px", "")) - 10) + "px";
+        });
+        downButton.addEventListener("click", () => {
+            if (Number(shuttleHeight.innerHTML) > 10000) {
+                shuttleHeight.innerHTML = String(Number(shuttleHeight.innerHTML) - 10000);
+                rocketImg.style.top = String(Number(rocketImg.style.top.replace("px", "")) + 10) + "px";
+            } else {
+                window.alert("To go down further, the shuttle must land.")
+            }
+        });
         
-    rightButton.addEventListener("click", () => {
-        let rightPosition = String(rocketImg.style.right);
-        status.innerHTML = "Moving right..." + rightPosition;
-        rocketImg.style.right = String(Number(rocketImg.style.right.replace("px", "")) - 10) + "px";
-    });
-    leftButton.addEventListener("click", () => {
-        let leftPosition = String(rocketImg.style.right);
-        status.innerHTML = "Moving left..." + leftPosition;
-        rocketImg.style.right = String(Number(rocketImg.style.right.replace("px", "")) + 10) + "px";
-    });
+        rocketImg.style.right = "100px";
+        rightButton.addEventListener("click", () => {
+            rocketImg.style.right = String(Number(rocketImg.style.right.replace("px", "")) - 10) + "px";
+        });
+        leftButton.addEventListener("click", () => {
+            rocketImg.style.right = String(Number(rocketImg.style.right.replace("px", "")) + 10) + "px";
+        });
 
-
-
-    landButton.addEventListener("click", () => {
-        let landAlert = window.alert("The shuttle is landing. landing gear engaged.");
-        status.innerHTML = "The shuttle has landed.";
-        backgroundColor.style.background = "green";
-        shuttleHeight.innerHTML = "0";
+        landButton.addEventListener("click", () => {
+            let landAlert = window.alert("The shuttle is landing. landing gear engaged.");
+            status.innerHTML = "The shuttle has landed.";
+            returnToOriginalPosition(backgroundColor, shuttleHeight, rocketImg);
+        });
     });
 
     abortButton.addEventListener("click", () => {
         let abortConfirm = window.confirm("Confirm that you want to abort the mission.");
         if (abortConfirm) {
             status.innerHTML = "Mission aborted.";
-            backgroundColor.style.background = "green";
-            shuttleHeight.innerHTML = "0";
+            returnToOriginalPosition(backgroundColor, shuttleHeight, rocketImg);
         }
     });
+}
 
-
-
+const returnToOriginalPosition = (backgroundColor, shuttleHeight, rocketImg) => {
+    backgroundColor.style.background = "green";
+    shuttleHeight.innerHTML = "0";
+    rocketImg.style.right = "100px";
+    rocketImg.style.top = "100px";
 }
 
 window.addEventListener("load", init);
